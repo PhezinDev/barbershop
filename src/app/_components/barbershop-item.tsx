@@ -10,7 +10,8 @@ interface BarbershopItemProps {
     barbershop: Barbershop;
 }
 
-const BarbershopItem = ({barbershop} : BarbershopItemProps) => {
+const BarberShopItem = ({barbershop} : BarbershopItemProps) => {
+
     return (
         <Card className="min-w-[167px] rounded-xl">
             <CardContent className="p-0 px-1 pt-1">
@@ -39,4 +40,4 @@ const BarbershopItem = ({barbershop} : BarbershopItemProps) => {
 
 }
 
-export default BarbershopItem;
+export default BarberShopItem;

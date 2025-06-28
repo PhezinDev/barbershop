@@ -13,6 +13,7 @@ export default function PhoneItem({phone}: PhoneItemProps) {
     const handleCopyPhone = (phone: string) => {
         navigator.clipboard.writeText(phone)
         toast.success("Número copiado com sucesso!")
+        
            
     }
 

@@ -1,10 +1,9 @@
 
 
 import { db } from "@/app/_lib/prisma";
-import { ChevronLeftIcon, MenuIcon, Smartphone } from "lucide-react";
+import {  MenuIcon } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/app/_components/ui/button";
-import Link from "next/link";
 import { MapPinIcon, StarIcon } from "lucide-react";
 import ServiceItem from "@/app/_components/ui/service-item";
 import BackButton from "@/app/_components/ui/back-button";
@@ -24,9 +23,6 @@ const BarbershopPage = async ({params}: BarbershopPageProps) => {
             services: true,
         }
     })
-
-    
-
 
     return (
         <div>
