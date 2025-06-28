@@ -1,101 +1,189 @@
+"use client";
+import { db } from "./_lib/prisma";
+import { clear } from "console";
+import { Button } from "../app/_components/ui/button";
+import { Textarea } from "../app/_components/ui/textarea";
+import Header from "./_components/header";
+import { Input } from "./_components/ui/input";
+import { SearchIcon } from "lucide-react";
 import Image from "next/image";
+import { Card, CardContent } from "./_components/ui/card";
+import { Badge } from "./_components/ui/badge";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import BarbershopItem from "./_components/barbershop-item";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+export default async function Home() {
+    const barbershops = await db.barbershop.findMany({});
+    const popularBarbershops = await db.barbershop.findMany({
+      orderBy: { name: "desc" },
+    });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.toLocaleString("pt-BR", { month: "long" });
+    const year = now.getFullYear();
+    const hour = now.toLocaleString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return (
+      <div>
+        <Header />
+        <div className="p-5">
+          <h2 className="text-xl font-bold">Olá, Phellipe!</h2>
+          <p>
+            {day} de {month} de {year}
+          </p>
+
+          {/* Busca */}
+          <div className="flex items-center gap-2 flex-row mt-6">
+            <Input placeholder="Faça sua busca" />
+            <Button size="icon">
+              <SearchIcon />
+            </Button>
+          </div>
+          {/* Busca Rapida */}
+          <div className="flex gap-3 overflow-scroll [&::-webkit-scrollbar]:hidden">
+            <Button variant="secondary" className="mt-4">
+              <Image
+                src="/cabelo.svg"
+                width={16}
+                height={16}
+                alt="Corte de Cabelo"
+              />
+              Corte de Cabelo
+            </Button>
+            <Button variant="secondary" className="mt-4">
+              <Image
+                src="/barba.svg"
+                width={16}
+                height={16}
+                alt="Corte de Barba"
+              />
+              Barba
+            </Button>
+            <Button variant="secondary" className="mt-4">
+              <Image
+                src="/acabamento.svg"
+                width={16}
+                height={16}
+                alt="Acabamento"
+              />
+              Acabamento
+            </Button>
+            <Button variant="secondary" className="mt-4">
+              <Image
+                src="/sobrancelha.svg"
+                width={16}
+                height={16}
+                alt="sobrancelha"
+              />
+              Sobrancelha
+            </Button>
+            <Button variant="secondary" className="mt-4">
+              <Image
+                src="/massagem.svg"
+                width={16}
+                height={16}
+                alt="massagem"
+              />
+              Massagem
+            </Button>
+            <Button variant="secondary" className="mt-4">
+              <Image
+                src="/hidratacao.svg"
+                width={16}
+                height={16}
+                alt="hidratacao"
+              />
+              Hidratação
+            </Button>
+          </div>
+
+          {/* Imagem */}
+          <div className="relative w-full h-[150px] mt-6">
             <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/banner-01.png"
+              alt="Banner de promoção"
+              fill
+              className="object-cover rounded-xl"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+
+          {/* agendamento */}
+          <h2 className="text-gray-400 font-bold text-xs uppercase mt-6 mb-6">
+            Seus agendamentos
+          </h2>
+          <Card>
+            <CardContent className="flex justify-between p-0">
+              {/* Esquerda */}
+              <div className="flex flex-col gap-2 py-5 pl-5">
+                <Badge className="w-fit">Confirmado</Badge>
+                <h3 className="font-semibold">Corte de Cabelo</h3>
+                <div className="flex items-center gap-2">
+                  <Avatar className="w-6 h-6">
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="Avatar do cliente"
+                    />
+                  </Avatar>
+                  <p className="text-sm">Barbearia FSW</p>
+                </div>
+              </div>
+
+              {/* Direita */}
+              <div className="flex flex-col items-center justify-center px-5 border-l-2 border-solid">
+                <p className="text-sm">{month}</p>
+                <p className="text-2xl">{day}</p>
+                <p className="text-sm">{hour}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <h2 className="text-gray-400 font-bold text-xs uppercase mt-6 mb-6">
+            Barbearias recomendadas
+          </h2>
+          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+            {barbershops.map((barbershop) => (
+              <BarbershopItem barbershop={barbershop} key={barbershop.id} />
+            ))}
+          </div>
+
+          <h2 className="text-gray-400 font-bold text-xs uppercase mt-6 mb-6">
+            Barbearias populares
+          </h2>
+          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+            {popularBarbershops.map((barbershop) => (
+              <BarbershopItem barbershop={barbershop} key={barbershop.id} />
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        <Card>
+          <CardContent className="p-5 border-none">
+            <h2 className="text-xl font-bold">Sobre o Barbershop</h2>
+            <p className="text-gray-500 mt-2">
+              O Barbershop é uma plataforma que conecta clientes a barbearias,
+              facilitando o agendamento de serviços de beleza e cuidados
+              pessoais.
+            </p>
+            <Textarea className="mt-4" placeholder="Deixe seu feedback..." />
+            <Button className="mt-4" variant="secondary">
+              Enviar
+            </Button>
+          </CardContent>
+        </Card>
+
+        <footer>
+          <Card className="border-none bg-background">
+            <CardContent className="p-5 py-6 text-center">
+              <p className="text-gray-400 text-sm">Desenvolvido por Phezin</p>
+              <p className="text-gray-400 text-xs">
+                © 2023 Barbershop. Todos os direitos reservados.
+              </p>
+            </CardContent>
+          </Card>
+        </footer>
+      </div>
+    );
+  
 }
