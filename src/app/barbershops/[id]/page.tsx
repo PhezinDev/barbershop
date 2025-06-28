@@ -1,11 +1,14 @@
 
+
 import { db } from "@/app/_lib/prisma";
-import { ChevronLeftIcon, MenuIcon } from "lucide-react";
+import { ChevronLeftIcon, MenuIcon, Smartphone } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/app/_components/ui/button";
 import Link from "next/link";
 import { MapPinIcon, StarIcon } from "lucide-react";
 import ServiceItem from "@/app/_components/ui/service-item";
+import BackButton from "@/app/_components/ui/back-button";
+import PhoneItem from "@/app/_components/phone-item";
 
 interface BarbershopPageProps {
     params: { id: string };
@@ -22,13 +25,15 @@ const BarbershopPage = async ({params}: BarbershopPageProps) => {
         }
     })
 
+    
+
 
     return (
         <div>
             {/* IMAGEM */}
             <div className="relative w-full h-[250px]">
-                <Image src={barbershop?.imageUrl} fill alt={barbershop?.name} className="object-cover"/>
-                <Button size="icon" variant="secondary" className="absolute top-4 left-4" asChild><Link href="/"><ChevronLeftIcon/></Link></Button>
+                <Image src={barbershop?.imageUrl || "/placeholder.webp"} fill alt={barbershop?.name || "barbershop"} className="object-cover"/>
+                <BackButton/>
                 <Button size="icon" variant="secondary" className="absolute top-4 right-4"><MenuIcon/></Button>
             </div>
 
@@ -62,6 +67,14 @@ const BarbershopPage = async ({params}: BarbershopPageProps) => {
                 <div className="space-y-3">
                     {barbershop?.services.map(service => <ServiceItem service={service} key={service.id} />)}
                 </div>
+            </div>
+
+            { /* CONTATO */}
+            <div className="space-y-3 p-5">
+                {barbershop?.phones.map(phone => (
+                    <PhoneItem key={phone} phone={phone}/>
+                    
+                ))}                
             </div>
         
 
